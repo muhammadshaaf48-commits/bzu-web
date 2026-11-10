@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  bzu-portal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bzu_portal_app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - APP_URL=https://bzu.edu.pk
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - DATABASE_URL=postgresql://bzu_admin:bzu_secret_pass@bzu-postgres:5432/bzu_production
+    volumes:
+      - bzu_data:/app/.data
+    depends_on:
+      - bzu-postgres
+
+  bzu-postgres:
+    image: postgres:16-alpine
+    container_name: bzu_portal_db
+    restart: always
+    environment:
+      POSTGRES_USER: bzu_admin
+      POSTGRES_PASSWORD: bzu_secret_pass
+      POSTGRES_DB: bzu_production
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+volumes:
+  bzu_data:
+  pg_data:

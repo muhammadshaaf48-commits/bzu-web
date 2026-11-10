@@ -1,0 +1,6 @@
+{
+  "name": "Bahauddin Zakariya University (BZU) Portal",
+  "description": "Official modernized web portal and academic management system for Bahauddin Zakariya University Multan, featuring admissions, academic explorer, faculty census, results, and AI assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

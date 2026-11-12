@@ -8,6 +8,9 @@ interface HeaderProps {
   onOpenSearch: () => void;
   onOpenContact: () => void;
   onOpenAiAssistant: () => void;
+  onOpenDesignedBy: () => void;
+  onGoHome: () => void;
+  isDesignedByActive?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -18,6 +21,9 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSearch,
   onOpenContact,
   onOpenAiAssistant,
+  onOpenDesignedBy,
+  onGoHome,
+  isDesignedByActive = false,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -67,6 +73,17 @@ export const Header: React.FC<HeaderProps> = ({
             <button onClick={() => onOpenResults()} className="hover:text-slate-100 transition-colors cursor-pointer active:scale-95">
               Roll Slips &amp; Results
             </button>
+            <span className="text-slate-500/40">|</span>
+            <button
+              onClick={onOpenDesignedBy}
+              className={`hover:text-white transition-colors cursor-pointer active:scale-95 text-[11px] font-mono flex items-center gap-1 ${
+                isDesignedByActive ? 'text-white font-bold' : 'text-cyan-300'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[13px] text-cyan-300">code</span>
+              Designed By
+            </button>
+            <span className="text-slate-500/40">|</span>
             <span className="inline-flex items-center gap-1 text-slate-200 bg-slate-200/10 px-2 py-0.5 rounded-full border border-slate-300/25 text-[10px] tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-200 beacon-dot"></span> HEC Verified
             </span>
@@ -78,7 +95,10 @@ export const Header: React.FC<HeaderProps> = ({
       <header className="sticky top-4 z-50 w-full px-4 sm:px-8 mt-2">
         <div className="max-w-7xl mx-auto liquid-glass-elevated rounded-3xl px-5 sm:px-8 py-3.5 flex items-center justify-between transition-all duration-300 sheen-overlay">
           {/* Crest & Name */}
-          <a className="flex items-center gap-3.5 group active:scale-95 transition-transform" href="#">
+          <button
+            onClick={onGoHome}
+            className="flex items-center gap-3.5 group active:scale-95 transition-transform text-left cursor-pointer"
+          >
             <div className="relative p-1.5 rounded-2xl liquid-pill group-hover:border-slate-200/50 transition-colors shadow-sm">
               <img
                 alt="BZU Crest"
@@ -95,16 +115,18 @@ export const Header: React.FC<HeaderProps> = ({
                 Multan, PK • Est. 1975
               </span>
             </div>
-          </a>
+          </button>
 
           {/* Glass Pill Navigation */}
           <nav className="hidden xl:flex items-center liquid-pill rounded-full px-2 py-1 gap-1 text-[13px] tracking-wide text-slate-300 font-medium">
-            <a
-              className="px-4 py-1.5 rounded-full hover:text-slate-100 hover:bg-slate-100/10 transition-all active:scale-95"
-              href="#about-section"
+            <button
+              onClick={onGoHome}
+              className={`px-4 py-1.5 rounded-full transition-all cursor-pointer active:scale-95 ${
+                !isDesignedByActive ? 'text-slate-100 font-semibold' : 'hover:text-slate-100 hover:bg-slate-100/10'
+              }`}
             >
-              About
-            </a>
+              Home
+            </button>
             <button
               onClick={() => onOpenAcademics()}
               className="px-4 py-1.5 rounded-full hover:text-slate-100 hover:bg-slate-100/10 transition-all cursor-pointer active:scale-95"
@@ -141,6 +163,16 @@ export const Header: React.FC<HeaderProps> = ({
             >
               Portals
             </a>
+            <button
+              onClick={onOpenDesignedBy}
+              className={`px-4 py-1.5 rounded-full transition-all cursor-pointer active:scale-95 ${
+                isDesignedByActive
+                  ? 'bg-slate-100 text-slate-950 font-bold shadow-[0_0_14px_rgba(241,245,249,0.35)]'
+                  : 'hover:text-slate-100 hover:bg-slate-100/10 text-cyan-300 font-medium'
+              }`}
+            >
+              Designed By
+            </button>
           </nav>
 
           {/* Glass Action Controls */}
@@ -250,6 +282,23 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <span className="material-symbols-outlined text-[18px]">contact_support</span>
                 Contact Desk
+              </button>
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenDesignedBy();
+                }}
+                className={`col-span-2 p-3 rounded-2xl border text-left font-medium flex items-center justify-between hover:bg-white/10 ${
+                  isDesignedByActive
+                    ? 'bg-slate-100 text-slate-950 border-slate-100 font-bold'
+                    : 'liquid-pill text-cyan-300 border-cyan-400/30'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[18px]">code</span>
+                  <span>Designed By — Muhammad Shaaf Azhar</span>
+                </div>
+                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
               </button>
             </div>
           </div>

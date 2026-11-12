@@ -6,6 +6,7 @@ interface FooterProps {
   onOpenFaculty: () => void;
   onOpenAdmissions: () => void;
   onOpenContact: () => void;
+  onOpenDesignedBy: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
@@ -14,6 +15,7 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenFaculty,
   onOpenAdmissions,
   onOpenContact,
+  onOpenDesignedBy,
 }) => {
   const [email, setEmail] = useState('');
   const [subscribing, setSubscribing] = useState(false);
@@ -204,6 +206,15 @@ export const Footer: React.FC<FooterProps> = ({
                   Grievance &amp; Contact Desk
                 </button>
               </li>
+              <li className="pt-1">
+                <button
+                  onClick={onOpenDesignedBy}
+                  className="hover:text-cyan-300 transition-colors cursor-pointer text-left flex items-center gap-1.5 text-cyan-300/90 font-medium"
+                >
+                  <span className="material-symbols-outlined text-[14px]">code</span>
+                  <span>Designed By Profile</span>
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -237,8 +248,17 @@ export const Footer: React.FC<FooterProps> = ({
 
         {/* Copyright bar */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© 2026 Bahauddin Zakariya University Multan. All Rights Reserved.</p>
-          <div className="flex flex-wrap items-center gap-6 text-[11px] font-mono text-slate-400">
+          <div className="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
+            <p>© 2026 Bahauddin Zakariya University Multan. All Rights Reserved.</p>
+            <span className="hidden sm:inline text-slate-600">•</span>
+            <button
+              onClick={onOpenDesignedBy}
+              className="text-cyan-300 hover:text-white transition-colors cursor-pointer underline underline-offset-4 decoration-cyan-400/40 hover:decoration-white font-medium flex items-center gap-1"
+            >
+              <span>Designed &amp; Developed by Muhammad Shaaf Azhar</span>
+            </button>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-6 text-[11px] font-mono text-slate-400">
             <button onClick={onOpenContact} className="hover:text-slate-200 transition-colors cursor-pointer">
               Privacy Policy
             </button>

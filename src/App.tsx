@@ -21,9 +21,13 @@ import { ContactModal } from './components/ContactModal.tsx';
 import { AiAssistantDrawer } from './components/AiAssistantDrawer.tsx';
 import { NewsDetailModal } from './components/NewsDetailModal.tsx';
 import { LeadershipModal } from './components/LeadershipModal.tsx';
+import { DesignedByPage } from './components/DesignedByPage.tsx';
 import { NewsBulletin } from './types/index.ts';
 
 export default function App() {
+  // Page View state ('home' | 'designed-by')
+  const [currentView, setCurrentView] = useState<'home' | 'designed-by'>('home');
+
   // Modal states
   const [academicsOpen, setAcademicsOpen] = useState(false);
   const [academicsLevel, setAcademicsLevel] = useState<string | undefined>(undefined);
@@ -42,6 +46,41 @@ export default function App() {
 
   const [selectedNews, setSelectedNews] = useState<NewsBulletin | null>(null);
   const [newsList, setNewsList] = useState<NewsBulletin[]>([]);
+
+  // Sync view with URL hash (e.g. #designed-by)
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#designed-by') {
+        setCurrentView('designed-by');
+      } else {
+        setCurrentView('home');
+      }
+    };
+
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handleHashChange);
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handleHashChange);
+    };
+  }, []);
+
+  const navigateToDesignedBy = () => {
+    setCurrentView('designed-by');
+    if (window.location.hash !== '#designed-by') {
+      window.location.hash = 'designed-by';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToHome = () => {
+    setCurrentView('home');
+    if (window.location.hash) {
+      window.history.pushState(null, '', window.location.pathname);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     fetch('/api/news')
@@ -110,57 +149,71 @@ export default function App() {
         onOpenSearch={() => setSearchOpen(true)}
         onOpenContact={() => setContactOpen(true)}
         onOpenAiAssistant={() => setAiAssistantOpen(true)}
+        onOpenDesignedBy={navigateToDesignedBy}
+        onGoHome={navigateToHome}
+        isDesignedByActive={currentView === 'designed-by'}
       />
 
       <main className="relative z-10 w-full pt-4 sm:pt-8 pb-16">
-        {/* Hero Section */}
-        <Hero
-          onOpenAdmissions={openAdmissionsWithTab}
-          onOpenAiAssistant={() => setAiAssistantOpen(true)}
-          onOpenResults={() => setResultsOpen(true)}
-          onOpenAcademics={() => openAcademicsWithLevel('All')}
-        />
+        {currentView === 'designed-by' ? (
+          <DesignedByPage
+            onBackToHome={navigateToHome}
+            onOpenAdmissions={() => openAdmissionsWithTab('apply')}
+            onOpenAcademics={() => openAcademicsWithLevel('All')}
+            onOpenAiAssistant={() => setAiAssistantOpen(true)}
+          />
+        ) : (
+          <>
+            {/* Hero Section */}
+            <Hero
+              onOpenAdmissions={openAdmissionsWithTab}
+              onOpenAiAssistant={() => setAiAssistantOpen(true)}
+              onOpenResults={() => setResultsOpen(true)}
+              onOpenAcademics={() => openAcademicsWithLevel('All')}
+            />
 
-        {/* Global Academic Standings & Rankings */}
-        <RankingsSection />
+            {/* Global Academic Standings & Rankings */}
+            <RankingsSection />
 
-        {/* Scale & Institutional Stature */}
-        <MetricsSection />
+            {/* Scale & Institutional Stature */}
+            <MetricsSection />
 
-        {/* Explore Degree Pathways (6 Pathways) */}
-        <DegreePathways
-          onSelectLevel={openAcademicsWithLevel}
-          onOpenAdmissions={() => openAdmissionsWithTab('apply')}
-        />
+            {/* Explore Degree Pathways (6 Pathways) */}
+            <DegreePathways
+              onSelectLevel={openAcademicsWithLevel}
+              onOpenAdmissions={() => openAdmissionsWithTab('apply')}
+            />
 
-        {/* Faculty Census & Academic Strength */}
-        <FacultyCensus onOpenFacultyDirectory={() => setFacultyOpen(true)} />
+            {/* Faculty Census & Academic Strength */}
+            <FacultyCensus onOpenFacultyDirectory={() => setFacultyOpen(true)} />
 
-        {/* Research & Innovation (ORIC) */}
-        <ResearchOric
-          onOpenAdmissions={openAdmissionsWithTab}
-          onOpenAcademics={openAcademicsWithLevel}
-        />
+            {/* Research & Innovation (ORIC) */}
+            <ResearchOric
+              onOpenAdmissions={openAdmissionsWithTab}
+              onOpenAcademics={openAcademicsWithLevel}
+            />
 
-        {/* Campus News, Schedules, Results & Vacancies */}
-        <CampusNews
-          newsList={newsList}
-          onOpenAdmissions={openAdmissionsWithTab}
-          onOpenResults={() => setResultsOpen(true)}
-          onSelectNews={news => setSelectedNews(news)}
-        />
+            {/* Campus News, Schedules, Results & Vacancies */}
+            <CampusNews
+              newsList={newsList}
+              onOpenAdmissions={openAdmissionsWithTab}
+              onOpenResults={() => setResultsOpen(true)}
+              onSelectNews={news => setSelectedNews(news)}
+            />
 
-        {/* Student & Affiliated Portals */}
-        <StudentPortals
-          onOpenAdmissions={openAdmissionsWithTab}
-          onOpenResults={() => setResultsOpen(true)}
-        />
+            {/* Student & Affiliated Portals */}
+            <StudentPortals
+              onOpenAdmissions={openAdmissionsWithTab}
+              onOpenResults={() => setResultsOpen(true)}
+            />
 
-        {/* 50th Golden Jubilee Era Banner */}
-        <JubileeBanner
-          onOpenAdmissions={() => openAdmissionsWithTab('apply')}
-          onOpenLeadershipMessage={() => setLeadershipOpen(true)}
-        />
+            {/* 50th Golden Jubilee Era Banner */}
+            <JubileeBanner
+              onOpenAdmissions={() => openAdmissionsWithTab('apply')}
+              onOpenLeadershipMessage={() => setLeadershipOpen(true)}
+            />
+          </>
+        )}
       </main>
 
       {/* Liquid Glass Footer */}
@@ -170,6 +223,7 @@ export default function App() {
         onOpenFaculty={() => setFacultyOpen(true)}
         onOpenAdmissions={() => openAdmissionsWithTab('apply')}
         onOpenContact={() => setContactOpen(true)}
+        onOpenDesignedBy={navigateToDesignedBy}
       />
 
       {/* Floating BZU AI Quick Assistant Trigger Button */}

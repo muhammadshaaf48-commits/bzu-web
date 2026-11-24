@@ -1,0 +1,589 @@
+{
+  "university": {
+    "name": "Bahauddin Zakariya University",
+    "short_name": "BZU",
+    "location": "Multan, Pakistan",
+    "academic_session": "2026-2027"
+  },
+  "dashboard": {
+    "total_students": 18450,
+    "total_faculty": 720,
+    "total_departments": 65,
+    "total_faculties": 12,
+    "active_courses": 245,
+    "annual_graduates": 1850,
+    "average_attendance": 87.5,
+    "library_books": 25600
+  },
+  "students": [
+    {
+      "id": "BZU-26-1001",
+      "name": "Ali Hassan",
+      "father_name": "Muhammad Hassan",
+      "department": "Data Science",
+      "program": "BS Data Science",
+      "semester": 1,
+      "roll_number": "DS-101",
+      "session": "2026-2030",
+      "email": "ali.hassan@example.com",
+      "phone": "03001234567",
+      "cgpa": 3.75,
+      "credit_hours": 18,
+      "status": "Active"
+    },
+    {
+      "id": "BZU-26-1002",
+      "name": "Sara Ahmed",
+      "father_name": "Ahmed Raza",
+      "department": "Computer Science",
+      "program": "BS Computer Science",
+      "semester": 3,
+      "roll_number": "CS-205",
+      "session": "2025-2029",
+      "email": "sara.ahmed@example.com",
+      "phone": "03011234567",
+      "cgpa": 3.91,
+      "credit_hours": 45,
+      "status": "Active"
+    },
+    {
+      "id": "BZU-26-1003",
+      "name": "Usman Khalid",
+      "father_name": "Khalid Mehmood",
+      "department": "Information Technology",
+      "program": "BS IT",
+      "semester": 5,
+      "roll_number": "IT-310",
+      "session": "2024-2028",
+      "email": "usman.khalid@example.com",
+      "phone": "03021234567",
+      "cgpa": 3.42,
+      "credit_hours": 60,
+      "status": "Active"
+    },
+    {
+      "id": "BZU-26-1004",
+      "name": "Ayesha Noor",
+      "father_name": "Tariq Noor",
+      "department": "Information Technology",
+      "program": "BS IT",
+      "semester": 5,
+      "roll_number": "IT-311",
+      "session": "2024-2028",
+      "email": "ayesha.noor@example.com",
+      "phone": "03031234567",
+      "cgpa": 3.68,
+      "credit_hours": 60,
+      "status": "Active"
+    },
+    {
+      "id": "BZU-26-1005",
+      "name": "Hamza Tariq",
+      "father_name": "Tariq Mehmood",
+      "department": "Data Science",
+      "program": "BS Data Science",
+      "semester": 1,
+      "roll_number": "DS-105",
+      "session": "2026-2030",
+      "email": "hamza.tariq@example.com",
+      "phone": "03041234567",
+      "cgpa": 3.25,
+      "credit_hours": 18,
+      "status": "Active"
+    }
+  ],
+  "departments": [
+    {
+      "id": "DEP-001",
+      "name": "Computer Science",
+      "faculty": "Computing",
+      "programs": [
+        "BSCS",
+        "MSCS",
+        "PhD"
+      ]
+    },
+    {
+      "id": "DEP-002",
+      "name": "Data Science",
+      "faculty": "Computing",
+      "programs": [
+        "BSDS",
+        "MSDS"
+      ]
+    },
+    {
+      "id": "DEP-003",
+      "name": "Information Technology",
+      "faculty": "Computing",
+      "programs": [
+        "BSIT",
+        "MSIT"
+      ]
+    },
+    {
+      "id": "DEP-004",
+      "name": "Mathematics",
+      "faculty": "Science",
+      "programs": [
+        "BS Mathematics",
+        "MPhil Mathematics"
+      ]
+    },
+    {
+      "id": "DEP-005",
+      "name": "Physics",
+      "faculty": "Science",
+      "programs": [
+        "BS Physics",
+        "MS Physics"
+      ]
+    },
+    {
+      "id": "DEP-006",
+      "name": "English",
+      "faculty": "Arts",
+      "programs": [
+        "BS English",
+        "MA English"
+      ]
+    }
+  ],
+  "courses": [
+    {
+      "code": "DS-101",
+      "name": "Introduction to Data Science",
+      "department": "Data Science",
+      "credit_hours": 3,
+      "semester": 1,
+      "instructor": "Dr. Sana Tariq"
+    },
+    {
+      "code": "CS-101",
+      "name": "Programming Fundamentals",
+      "department": "Computer Science",
+      "credit_hours": 3,
+      "semester": 1,
+      "instructor": "Mr. Hamza Raza"
+    },
+    {
+      "code": "MTH-101",
+      "name": "Calculus and Analytical Geometry",
+      "department": "Mathematics",
+      "credit_hours": 3,
+      "semester": 1,
+      "instructor": "Mr. Usman Shah"
+    },
+    {
+      "code": "PHY-101",
+      "name": "Applied Physics",
+      "department": "Physics",
+      "credit_hours": 3,
+      "semester": 1,
+      "instructor": "Dr. Fatima Ali"
+    },
+    {
+      "code": "ENG-101",
+      "name": "Functional English",
+      "department": "English",
+      "credit_hours": 3,
+      "semester": 1,
+      "instructor": "Ms. Ayesha Noor"
+    },
+    {
+      "code": "DS-102",
+      "name": "Discrete Structures",
+      "department": "Data Science",
+      "credit_hours": 3,
+      "semester": 1,
+      "instructor": "Dr. Ahmed Malik"
+    }
+  ],
+  "admissions": [
+    {
+      "application_id": "ADM-26001",
+      "name": "Bilal Ahmad",
+      "program": "BS Data Science",
+      "marks_percentage": 89.5,
+      "application_date": "2026-11-15",
+      "status": "Approved"
+    },
+    {
+      "application_id": "ADM-26002",
+      "name": "Hira Fatima",
+      "program": "BS Computer Science",
+      "marks_percentage": 92.3,
+      "application_date": "2026-11-16",
+      "status": "Under Review"
+    },
+    {
+      "application_id": "ADM-26003",
+      "name": "Hassan Raza",
+      "program": "BS IT",
+      "marks_percentage": 85.7,
+      "application_date": "2026-11-17",
+      "status": "Approved"
+    },
+    {
+      "application_id": "ADM-26004",
+      "name": "Maryam Ali",
+      "program": "BBA",
+      "marks_percentage": 91.2,
+      "application_date": "2026-11-18",
+      "status": "Pending"
+    }
+  ],
+  "admission_statistics": {
+    "total_applications": 4850,
+    "approved": 3250,
+    "under_review": 1100,
+    "rejected": 500
+  },
+  "merit_list": [
+    {
+      "position": 1,
+      "name": "Ahmed Raza",
+      "program": "BS Computer Science",
+      "aggregate": 96.45,
+      "status": "Selected"
+    },
+    {
+      "position": 2,
+      "name": "Fatima Noor",
+      "program": "BS Data Science",
+      "aggregate": 95.82,
+      "status": "Selected"
+    },
+    {
+      "position": 3,
+      "name": "Hamza Ali",
+      "program": "BS IT",
+      "aggregate": 94.7,
+      "status": "Selected"
+    },
+    {
+      "position": 4,
+      "name": "Ayesha Khan",
+      "program": "BS Computer Science",
+      "aggregate": 93.65,
+      "status": "Waiting"
+    }
+  ],
+  "results": [
+    {
+      "student_id": "BZU-26-1001",
+      "student_name": "Ali Hassan",
+      "semester": 1,
+      "examination": "Fall 2026",
+      "total_marks": 600,
+      "obtained_marks": 529,
+      "percentage": 88.17,
+      "grade": "A",
+      "cgpa": 3.75,
+      "status": "Pass",
+      "subjects": [
+        {
+          "name": "Programming Fundamentals",
+          "total_marks": 100,
+          "obtained_marks": 88
+        },
+        {
+          "name": "Applied Physics",
+          "total_marks": 100,
+          "obtained_marks": 82
+        },
+        {
+          "name": "Functional English",
+          "total_marks": 100,
+          "obtained_marks": 91
+        },
+        {
+          "name": "Calculus",
+          "total_marks": 100,
+          "obtained_marks": 85
+        },
+        {
+          "name": "Discrete Structures",
+          "total_marks": 100,
+          "obtained_marks": 89
+        },
+        {
+          "name": "Introduction to Data Science",
+          "total_marks": 100,
+          "obtained_marks": 94
+        }
+      ]
+    }
+  ],
+  "attendance": [
+    {
+      "student_id": "BZU-26-1001",
+      "name": "Ali Hassan",
+      "total_classes": 30,
+      "attended": 28,
+      "absent": 2,
+      "percentage": 93.33
+    },
+    {
+      "student_id": "BZU-26-1002",
+      "name": "Sara Ahmed",
+      "total_classes": 30,
+      "attended": 25,
+      "absent": 5,
+      "percentage": 83.33
+    },
+    {
+      "student_id": "BZU-26-1003",
+      "name": "Usman Khalid",
+      "total_classes": 30,
+      "attended": 21,
+      "absent": 9,
+      "percentage": 70.0
+    }
+  ],
+  "fee_records": [
+    {
+      "student_id": "BZU-26-1001",
+      "semester": 1,
+      "total_fee": 76000,
+      "paid": 76000,
+      "remaining": 0,
+      "status": "Paid"
+    },
+    {
+      "student_id": "BZU-26-1002",
+      "semester": 3,
+      "total_fee": 76000,
+      "paid": 50000,
+      "remaining": 26000,
+      "status": "Partial"
+    },
+    {
+      "student_id": "BZU-26-1003",
+      "semester": 5,
+      "total_fee": 76000,
+      "paid": 76000,
+      "remaining": 0,
+      "status": "Paid"
+    }
+  ],
+  "faculty": [
+    {
+      "employee_id": "EMP-001",
+      "name": "Dr. Ahmed Malik",
+      "department": "Computer Science",
+      "designation": "Professor",
+      "qualification": "PhD Computer Science"
+    },
+    {
+      "employee_id": "EMP-002",
+      "name": "Dr. Sana Tariq",
+      "department": "Data Science",
+      "designation": "Associate Professor",
+      "qualification": "PhD Data Science"
+    },
+    {
+      "employee_id": "EMP-003",
+      "name": "Mr. Usman Shah",
+      "department": "Mathematics",
+      "designation": "Lecturer",
+      "qualification": "MS Mathematics"
+    },
+    {
+      "employee_id": "EMP-004",
+      "name": "Dr. Fatima Ali",
+      "department": "Physics",
+      "designation": "Assistant Professor",
+      "qualification": "PhD Physics"
+    }
+  ],
+  "scholarships": [
+    {
+      "id": "SCH-001",
+      "name": "Merit Scholarship",
+      "eligibility": "CGPA 3.80 or above",
+      "amount_pkr": 30000,
+      "status": "Available"
+    },
+    {
+      "id": "SCH-002",
+      "name": "Need-Based Scholarship",
+      "eligibility": "Financial Need",
+      "amount_pkr": 25000,
+      "status": "Available"
+    },
+    {
+      "id": "SCH-003",
+      "name": "Excellence Award",
+      "eligibility": "Top 3 Students",
+      "amount_pkr": 40000,
+      "status": "Available"
+    }
+  ],
+  "library": {
+    "total_books": 25600,
+    "available_books": 18200,
+    "issued_books": 7400,
+    "books": [
+      {
+        "id": "LIB-001",
+        "title": "Introduction to Algorithms",
+        "author": "Thomas H. Cormen",
+        "available_copies": 12
+      },
+      {
+        "id": "LIB-002",
+        "title": "Clean Code",
+        "author": "Robert C. Martin",
+        "available_copies": 8
+      },
+      {
+        "id": "LIB-003",
+        "title": "Data Science from Scratch",
+        "author": "Joel Grus",
+        "available_copies": 10
+      },
+      {
+        "id": "LIB-004",
+        "title": "Physics for Scientists",
+        "author": "Raymond Serway",
+        "available_copies": 15
+      }
+    ]
+  },
+  "hostels": [
+    {
+      "id": "H-001",
+      "name": "Jinnah Hostel",
+      "total_rooms": 120,
+      "occupied_rooms": 105,
+      "available_rooms": 15
+    },
+    {
+      "id": "H-002",
+      "name": "Iqbal Hostel",
+      "total_rooms": 100,
+      "occupied_rooms": 88,
+      "available_rooms": 12
+    },
+    {
+      "id": "H-003",
+      "name": "Fatima Hostel",
+      "total_rooms": 90,
+      "occupied_rooms": 75,
+      "available_rooms": 15
+    }
+  ],
+  "transport": [
+    {
+      "bus_id": "BUS-001",
+      "route": "Buch Villas - BZU",
+      "driver": "Muhammad Aslam",
+      "capacity": 45,
+      "status": "Active"
+    },
+    {
+      "bus_id": "BUS-002",
+      "route": "Shah Rukn-e-Alam - BZU",
+      "driver": "Imran Shah",
+      "capacity": 50,
+      "status": "Active"
+    },
+    {
+      "bus_id": "BUS-003",
+      "route": "Bosan Road - BZU",
+      "driver": "Khalid Mehmood",
+      "capacity": 45,
+      "status": "Active"
+    }
+  ],
+  "examinations": [
+    {
+      "exam_id": "EX-101",
+      "subject": "Programming Fundamentals",
+      "date": "2026-12-05",
+      "time": "09:00 AM",
+      "venue": "Hall A"
+    },
+    {
+      "exam_id": "EX-102",
+      "subject": "Applied Physics",
+      "date": "2026-12-07",
+      "time": "10:00 AM",
+      "venue": "Hall B"
+    },
+    {
+      "exam_id": "EX-103",
+      "subject": "Calculus",
+      "date": "2026-12-09",
+      "time": "09:00 AM",
+      "venue": "Hall C"
+    }
+  ],
+  "complaints": [
+    {
+      "ticket_id": "TKT-001",
+      "student_name": "Ali Hassan",
+      "complaint": "Fee Voucher Issue",
+      "date": "2026-11-18",
+      "status": "Resolved"
+    },
+    {
+      "ticket_id": "TKT-002",
+      "student_name": "Sara Ahmed",
+      "complaint": "Portal Login Problem",
+      "date": "2026-11-19",
+      "status": "Pending"
+    },
+    {
+      "ticket_id": "TKT-003",
+      "student_name": "Usman Khalid",
+      "complaint": "Attendance Error",
+      "date": "2026-11-20",
+      "status": "In Progress"
+    }
+  ],
+  "events": [
+    {
+      "event_id": "EVT-001",
+      "name": "Annual Sports Gala",
+      "date": "2026-12-05",
+      "venue": "Sports Ground"
+    },
+    {
+      "event_id": "EVT-002",
+      "name": "Data Science Seminar",
+      "date": "2026-12-08",
+      "venue": "Main Auditorium"
+    },
+    {
+      "event_id": "EVT-003",
+      "name": "Annual Job Fair",
+      "date": "2026-12-18",
+      "venue": "University Campus"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "NOT-001",
+      "title": "Midterm Examination Schedule",
+      "message": "The examination schedule is now available.",
+      "date": "2026-11-25",
+      "priority": "High"
+    },
+    {
+      "id": "NOT-002",
+      "title": "Spring 2027 Registration",
+      "message": "Course registration will open soon.",
+      "date": "2026-11-20",
+      "priority": "Medium"
+    },
+    {
+      "id": "NOT-003",
+      "title": "Merit Scholarship Applications",
+      "message": "Eligible students can apply for scholarships.",
+      "date": "2026-11-18",
+      "priority": "High"
+    }
+  ]
+}

@@ -3,9 +3,14 @@ import React from 'react';
 interface StudentPortalsProps {
   onOpenAdmissions: (tab?: 'apply' | 'track' | 'calculator' | 'merit') => void;
   onOpenResults: () => void;
+  onOpenDataDirectory?: () => void;
 }
 
-export const StudentPortals: React.FC<StudentPortalsProps> = ({ onOpenAdmissions, onOpenResults }) => {
+export const StudentPortals: React.FC<StudentPortalsProps> = ({
+  onOpenAdmissions,
+  onOpenResults,
+  onOpenDataDirectory,
+}) => {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-8 py-16" id="portals">
       <div className="text-center max-w-2xl mx-auto space-y-2 mb-10">
@@ -69,17 +74,17 @@ export const StudentPortals: React.FC<StudentPortalsProps> = ({ onOpenAdmissions
 
         {/* 4. Roll No. Slips */}
         <button
-          onClick={onOpenResults}
+          onClick={onOpenDataDirectory || onOpenResults}
           className="liquid-glass-elevated p-6 rounded-3xl text-center space-y-3 group transition-all spotlight-card active:scale-95 cursor-pointer"
         >
           <div className="w-12 h-12 rounded-2xl liquid-pill text-slate-200 flex items-center justify-center mx-auto group-hover:bg-slate-100 group-hover:text-slate-950 group-hover:scale-110 transition-all duration-300">
-            <span className="material-symbols-outlined text-[24px]">badge</span>
+            <span className="material-symbols-outlined text-[24px]">dataset</span>
           </div>
           <div>
             <p className="text-sm font-bold text-slate-100 group-hover:text-white transition-colors">
-              Roll No. Slips
+              Data Directory
             </p>
-            <span className="text-[11px] text-slate-400 mt-1 block">Exam hall tickets</span>
+            <span className="text-[11px] text-slate-400 mt-1 block">Hosted records &amp; slips</span>
           </div>
         </button>
       </div>

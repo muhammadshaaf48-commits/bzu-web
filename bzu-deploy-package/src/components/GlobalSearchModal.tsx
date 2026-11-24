@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Program, FacultyMember, NewsBulletin } from '../types/index.ts';
+import { fetchFacultyMembers, fetchNews, fetchPrograms } from '../services/hostedData.ts';
 
 interface GlobalSearchModalProps {
   isOpen: boolean;
@@ -29,11 +30,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   useEffect(() => {
     if (!isOpen) return;
     setLoading(true);
-    Promise.all([
-      fetch('/api/programs').then(r => r.json()),
-      fetch('/api/faculty-members').then(r => r.json()),
-      fetch('/api/news').then(r => r.json()),
-    ])
+    Promise.all([fetchPrograms(), fetchFacultyMembers(), fetchNews()])
       .then(([p, f, n]) => {
         setPrograms(p);
         setFaculty(f);

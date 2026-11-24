@@ -27,6 +27,7 @@ RUN npm ci --omit=dev && npm install -g tsx
 
 # Copy built frontend assets and server backend
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/public ./public
 COPY --from=builder /app/server.ts ./server.ts
 COPY --from=builder /app/src ./src
 COPY --from=builder /app/schema.sql ./schema.sql

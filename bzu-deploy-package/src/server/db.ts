@@ -14,6 +14,17 @@ import {
 
 const DATA_DIR = path.resolve(process.cwd(), '.data');
 const DATA_FILE = path.join(DATA_DIR, 'bzu_database.json');
+const PUBLIC_DATA_FILE = path.resolve(process.cwd(), 'public', 'bzu_database.json');
+
+const CANDIDATE_JSON_PATHS = [
+  path.resolve(process.cwd(), 'data.json'),
+  path.resolve(process.cwd(), 'bzu_database.json'),
+  path.resolve(process.cwd(), 'public', 'data.json'),
+  PUBLIC_DATA_FILE,
+  path.resolve(process.cwd(), 'dist', 'data.json'),
+  path.resolve(process.cwd(), 'dist', 'bzu_database.json'),
+  DATA_FILE,
+];
 
 interface DatabaseStore {
   faculties: Faculty[];
@@ -26,7 +37,28 @@ interface DatabaseStore {
   newsBulletins: NewsBulletin[];
   contactInquiries: ContactInquiry[];
   subscribers: string[];
+  customData?: Record<string, unknown>;
 }
+
+const KNOWN_KEYS = new Set([
+  'faculties',
+  'departments',
+  'programs',
+  'courses',
+  'facultyMembers',
+  'faculty',
+  'meritEntries',
+  'meritLists',
+  'merit',
+  'examResults',
+  'results',
+  'applications',
+  'newsBulletins',
+  'news',
+  'contactInquiries',
+  'subscribers',
+  'customData',
+]);
 
 const initialFaculties: Faculty[] = [
   {
@@ -676,25 +708,16 @@ const initialNews: NewsBulletin[] = [
 
 class DatabaseManager {
   private data: DatabaseStore;
+  private activeFilePath: string | null = null;
+  private activeFileMtime: number = 0;
+  private lastCheckAt: number = 0;
 
   constructor() {
     this.data = this.loadFromDisk();
   }
 
-  private loadFromDisk(): DatabaseStore {
-    try {
-      if (!fs.existsSync(DATA_DIR)) {
-        fs.mkdirSync(DATA_DIR, { recursive: true });
-      }
-      if (fs.existsSync(DATA_FILE)) {
-        const content = fs.readFileSync(DATA_FILE, 'utf-8');
-        return JSON.parse(content);
-      }
-    } catch (e) {
-      console.warn('Could not read existing database file, initializing fresh store:', e);
-    }
-
-    const defaultStore: DatabaseStore = {
+  private getDefaultStore(): DatabaseStore {
+    return {
       faculties: initialFaculties,
       departments: initialDepartments,
       programs: initialPrograms,
@@ -735,27 +758,160 @@ class DatabaseManager {
       contactInquiries: [],
       subscribers: ['registrar@bzu.edu.pk'],
     };
+  }
 
+  private normalizeParsedJson(raw: unknown): DatabaseStore {
+    const defaults = this.getDefaultStore();
+    if (Array.isArray(raw)) {
+      return {
+        ...defaults,
+        customData: { records: raw },
+      };
+    }
+
+    if (raw && typeof raw === 'object') {
+      const obj = raw as Record<string, unknown>;
+      const customData: Record<string, unknown> = {};
+      for (const [k, v] of Object.entries(obj)) {
+        if (!KNOWN_KEYS.has(k)) {
+          customData[k] = v;
+        }
+      }
+      if (obj.customData && typeof obj.customData === 'object') {
+        Object.assign(customData, obj.customData as Record<string, unknown>);
+      }
+
+      return {
+        faculties: Array.isArray(obj.faculties) ? (obj.faculties as Faculty[]) : defaults.faculties,
+        departments: Array.isArray(obj.departments) ? (obj.departments as Department[]) : defaults.departments,
+        programs: Array.isArray(obj.programs)
+          ? (obj.programs as Program[])
+          : Array.isArray(obj.courses)
+          ? (obj.courses as Program[])
+          : defaults.programs,
+        facultyMembers: Array.isArray(obj.facultyMembers)
+          ? (obj.facultyMembers as FacultyMember[])
+          : Array.isArray(obj.faculty)
+          ? (obj.faculty as FacultyMember[])
+          : defaults.facultyMembers,
+        meritEntries: Array.isArray(obj.meritEntries)
+          ? (obj.meritEntries as MeritEntry[])
+          : Array.isArray(obj.meritLists)
+          ? (obj.meritLists as MeritEntry[])
+          : Array.isArray(obj.merit)
+          ? (obj.merit as MeritEntry[])
+          : defaults.meritEntries,
+        examResults: Array.isArray(obj.examResults)
+          ? (obj.examResults as ExamResult[])
+          : Array.isArray(obj.results)
+          ? (obj.results as ExamResult[])
+          : defaults.examResults,
+        applications: Array.isArray(obj.applications)
+          ? (obj.applications as AdmissionApplication[])
+          : defaults.applications,
+        newsBulletins: Array.isArray(obj.newsBulletins)
+          ? (obj.newsBulletins as NewsBulletin[])
+          : Array.isArray(obj.news)
+          ? (obj.news as NewsBulletin[])
+          : defaults.newsBulletins,
+        contactInquiries: Array.isArray(obj.contactInquiries)
+          ? (obj.contactInquiries as ContactInquiry[])
+          : defaults.contactInquiries,
+        subscribers: Array.isArray(obj.subscribers) ? (obj.subscribers as string[]) : defaults.subscribers,
+        ...(Object.keys(customData).length > 0 ? { customData } : {}),
+      };
+    }
+
+    return defaults;
+  }
+
+  private findNewestJsonSource(): { filePath: string; mtimeMs: number } | null {
+    let newest: { filePath: string; mtimeMs: number } | null = null;
+    for (const candidate of CANDIDATE_JSON_PATHS) {
+      try {
+        if (fs.existsSync(candidate)) {
+          const stat = fs.statSync(candidate);
+          if (stat.isFile() && (!newest || stat.mtimeMs > newest.mtimeMs)) {
+            newest = { filePath: candidate, mtimeMs: stat.mtimeMs };
+          }
+        }
+      } catch {
+        // ignore unreadable path
+      }
+    }
+    return newest;
+  }
+
+  private ensureFreshData() {
+    const now = Date.now();
+    if (now - this.lastCheckAt < 1000) return;
+    this.lastCheckAt = now;
+
+    const newest = this.findNewestJsonSource();
+    if (newest && (newest.filePath !== this.activeFilePath || newest.mtimeMs > this.activeFileMtime)) {
+      try {
+        const content = fs.readFileSync(newest.filePath, 'utf-8');
+        const parsed = JSON.parse(content);
+        this.data = this.normalizeParsedJson(parsed);
+        this.activeFilePath = newest.filePath;
+        this.activeFileMtime = newest.mtimeMs;
+      } catch (e) {
+        console.warn(`Could not reload JSON file from ${newest.filePath}:`, e);
+      }
+    }
+  }
+
+  private loadFromDisk(): DatabaseStore {
+    const newest = this.findNewestJsonSource();
+    if (newest) {
+      try {
+        const content = fs.readFileSync(newest.filePath, 'utf-8');
+        const parsed = JSON.parse(content);
+        this.activeFilePath = newest.filePath;
+        this.activeFileMtime = newest.mtimeMs;
+        this.lastCheckAt = Date.now();
+        return this.normalizeParsedJson(parsed);
+      } catch (e) {
+        console.warn(`Could not read existing JSON file (${newest.filePath}), initializing fresh store:`, e);
+      }
+    }
+
+    const defaultStore = this.getDefaultStore();
     this.saveToDisk(defaultStore);
     return defaultStore;
   }
 
   private saveToDisk(store: DatabaseStore) {
+    const serialized = JSON.stringify(store, null, 2);
     try {
       if (!fs.existsSync(DATA_DIR)) {
         fs.mkdirSync(DATA_DIR, { recursive: true });
       }
-      fs.writeFileSync(DATA_FILE, JSON.stringify(store, null, 2), 'utf-8');
+      fs.writeFileSync(DATA_FILE, serialized, 'utf-8');
+      const publicDir = path.dirname(PUBLIC_DATA_FILE);
+      if (fs.existsSync(publicDir)) {
+        fs.writeFileSync(PUBLIC_DATA_FILE, serialized, 'utf-8');
+      }
+      const stat = fs.statSync(DATA_FILE);
+      this.activeFilePath = DATA_FILE;
+      this.activeFileMtime = stat.mtimeMs;
     } catch (e) {
       console.error('Failed to write database to disk:', e);
     }
   }
 
+  public getFullDatabase(): DatabaseStore {
+    this.ensureFreshData();
+    return this.data;
+  }
+
   public getFaculties(): Faculty[] {
+    this.ensureFreshData();
     return this.data.faculties;
   }
 
   public getDepartments(facultyId?: string): Department[] {
+    this.ensureFreshData();
     if (facultyId) {
       return this.data.departments.filter(d => d.facultyId === facultyId);
     }
@@ -763,6 +919,7 @@ class DatabaseManager {
   }
 
   public getPrograms(filter?: { level?: string; facultyId?: string; query?: string }): Program[] {
+    this.ensureFreshData();
     let list = this.data.programs;
     if (filter?.level && filter.level !== 'All') {
       list = list.filter(p => p.level.toLowerCase() === filter.level?.toLowerCase() || p.level.includes(filter.level!));
@@ -783,6 +940,7 @@ class DatabaseManager {
   }
 
   public getFacultyMembers(filter?: { query?: string; department?: string; designation?: string }): FacultyMember[] {
+    this.ensureFreshData();
     let list = this.data.facultyMembers;
     if (filter?.department) {
       list = list.filter(f => f.departmentName === filter.department);
@@ -802,6 +960,7 @@ class DatabaseManager {
   }
 
   public getMeritEntries(programQuery?: string): MeritEntry[] {
+    this.ensureFreshData();
     if (programQuery) {
       const q = programQuery.toLowerCase();
       return this.data.meritEntries.filter(m => m.programTitle.toLowerCase().includes(q));
@@ -810,6 +969,7 @@ class DatabaseManager {
   }
 
   public searchExamResult(query: string): ExamResult | null {
+    this.ensureFreshData();
     const q = query.trim().toUpperCase();
     return this.data.examResults.find(r =>
       r.rollNumber.toUpperCase() === q ||
@@ -819,10 +979,12 @@ class DatabaseManager {
   }
 
   public getAllExamResults(): ExamResult[] {
+    this.ensureFreshData();
     return this.data.examResults;
   }
 
   public createAdmissionApplication(appData: Omit<AdmissionApplication, 'id' | 'appTrackingNo' | 'submissionDate' | 'status' | 'challanNumber' | 'challanAmount' | 'calculatedAggregate'>): AdmissionApplication {
+    this.ensureFreshData();
     const matricRatio = (appData.matricMarks / (appData.matricTotal || 1100)) * 30;
     const interRatio = (appData.interMarks / (appData.interTotal || 520)) * 50;
     const entryRatio = (appData.entryTestScore ? (appData.entryTestScore / 100) * 20 : 15);
@@ -849,15 +1011,18 @@ class DatabaseManager {
   }
 
   public getApplicationByTrackingNo(trackingNo: string): AdmissionApplication | null {
+    this.ensureFreshData();
     const q = trackingNo.trim().toUpperCase();
     return this.data.applications.find(a => a.appTrackingNo.toUpperCase() === q || a.cnic === trackingNo.trim()) || null;
   }
 
   public getNews(): NewsBulletin[] {
+    this.ensureFreshData();
     return this.data.newsBulletins;
   }
 
   public addContactInquiry(inquiry: Omit<ContactInquiry, 'id' | 'ticketNumber' | 'status' | 'createdAt'>): ContactInquiry {
+    this.ensureFreshData();
     const ticket = `BZU-TKT-${Math.floor(100000 + Math.random() * 900000)}`;
     const newInquiry: ContactInquiry = {
       ...inquiry,
@@ -872,6 +1037,7 @@ class DatabaseManager {
   }
 
   public addSubscriber(email: string): boolean {
+    this.ensureFreshData();
     const clean = email.trim().toLowerCase();
     if (!this.data.subscribers.includes(clean)) {
       this.data.subscribers.push(clean);

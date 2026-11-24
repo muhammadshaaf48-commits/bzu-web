@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { AdmissionApplication, MeritEntry } from '../types/index.ts';
+import {
+  fetchMeritLists,
+  submitAdmissionApplication,
+  trackAdmissionApplication,
+} from '../services/hostedData.ts';
 
 interface AdmissionsPortalModalProps {
   isOpen: boolean;
@@ -74,8 +79,7 @@ export const AdmissionsPortalModal: React.FC<AdmissionsPortalModalProps> = ({
   useEffect(() => {
     if (activeTab === 'merit' && isOpen) {
       setMeritLoading(true);
-      fetch('/api/merit-lists')
-        .then(res => res.json())
+      fetchMeritLists()
         .then(data => setMeritLists(data))
         .catch(err => console.error(err))
         .finally(() => setMeritLoading(false));
@@ -99,18 +103,8 @@ export const AdmissionsPortalModal: React.FC<AdmissionsPortalModalProps> = ({
     setSubmitError('');
 
     try {
-      const res = await fetch('/api/admissions/apply', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to submit application');
-      }
-
-      setSubmittedApp(data.application);
+      const application = await submitAdmissionApplication(formData);
+      setSubmittedApp(application);
     } catch (err: any) {
       setSubmitError(err.message || 'Error occurred while saving application');
     } finally {
@@ -126,11 +120,7 @@ export const AdmissionsPortalModal: React.FC<AdmissionsPortalModalProps> = ({
     setTrackedRecord(null);
 
     try {
-      const res = await fetch(`/api/admissions/status/${encodeURIComponent(trackQuery.trim())}`);
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Application record not found');
-      }
+      const data = await trackAdmissionApplication(trackQuery);
       setTrackedRecord(data);
     } catch (err: any) {
       setTrackError(err.message || 'Tracking ID not found');

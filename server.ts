@@ -27,6 +27,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'healthy', university: 'Bahauddin Zakariya University Multan', timestamp: new Date() });
 });
 
+app.get('/api/database', (req, res) => {
+  res.json(db.getFullDatabase());
+});
+
 app.get('/api/faculties', (req, res) => {
   res.json(db.getFaculties());
 });

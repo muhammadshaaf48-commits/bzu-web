@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ExamResult } from '../types/index.ts';
+import { searchExamResult } from '../services/hostedData.ts';
 
 interface ExaminationResultsModalProps {
   isOpen: boolean;
@@ -25,15 +26,7 @@ export const ExaminationResultsModal: React.FC<ExaminationResultsModalProps> = (
     setResult(null);
 
     try {
-      const res = await fetch('/api/results/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: searchTerm }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Result record not found');
-      }
+      const data = await searchExamResult(searchTerm);
       setResult(data);
     } catch (err: any) {
       setError(err.message || 'Error retrieving result');

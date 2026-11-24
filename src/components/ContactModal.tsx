@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ContactInquiry } from '../types/index.ts';
+import { submitContactInquiry } from '../services/hostedData.ts';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -28,16 +29,8 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) =
     setError('');
 
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to submit inquiry');
-      }
-      setSubmittedTicket(data.ticket);
+      const ticket = await submitContactInquiry(formData);
+      setSubmittedTicket(ticket);
     } catch (err: any) {
       setError(err.message || 'Error occurred while logging grievance');
     } finally {

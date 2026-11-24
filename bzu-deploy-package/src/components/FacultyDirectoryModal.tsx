@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FacultyMember } from '../types/index.ts';
+import { fetchFacultyMembers } from '../services/hostedData.ts';
 
 interface FacultyDirectoryModalProps {
   isOpen: boolean;
@@ -18,8 +19,7 @@ export const FacultyDirectoryModal: React.FC<FacultyDirectoryModalProps> = ({
   useEffect(() => {
     if (!isOpen) return;
     setLoading(true);
-    fetch('/api/faculty-members')
-      .then(res => res.json())
+    fetchFacultyMembers()
       .then(data => setFacultyList(data))
       .catch(err => console.error(err))
       .finally(() => setLoading(false));

@@ -22,6 +22,8 @@ import { AiAssistantDrawer } from './components/AiAssistantDrawer.tsx';
 import { NewsDetailModal } from './components/NewsDetailModal.tsx';
 import { LeadershipModal } from './components/LeadershipModal.tsx';
 import { DesignedByPage } from './components/DesignedByPage.tsx';
+import { HostedDataModal } from './components/HostedDataModal.tsx';
+import { HostedDatabase, loadHostedDatabase } from './services/hostedData.ts';
 import { NewsBulletin } from './types/index.ts';
 
 export default function App() {
@@ -43,9 +45,11 @@ export default function App() {
   const [contactOpen, setContactOpen] = useState(false);
   const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
   const [leadershipOpen, setLeadershipOpen] = useState(false);
+  const [dataDirectoryOpen, setDataDirectoryOpen] = useState(false);
 
   const [selectedNews, setSelectedNews] = useState<NewsBulletin | null>(null);
   const [newsList, setNewsList] = useState<NewsBulletin[]>([]);
+  const [hostedDb, setHostedDb] = useState<HostedDatabase | null>(null);
 
   // Sync view with URL hash (e.g. #designed-by)
   useEffect(() => {
@@ -83,9 +87,11 @@ export default function App() {
   };
 
   useEffect(() => {
-    fetch('/api/news')
-      .then(res => res.json())
-      .then(data => setNewsList(data))
+    loadHostedDatabase()
+      .then(db => {
+        setHostedDb(db);
+        setNewsList(db.newsBulletins);
+      })
       .catch(console.error);
   }, []);
 
@@ -196,15 +202,18 @@ export default function App() {
             {/* Campus News, Schedules, Results & Vacancies */}
             <CampusNews
               newsList={newsList}
+              customData={hostedDb?.customData}
               onOpenAdmissions={openAdmissionsWithTab}
               onOpenResults={() => setResultsOpen(true)}
               onSelectNews={news => setSelectedNews(news)}
+              onOpenDataDirectory={() => setDataDirectoryOpen(true)}
             />
 
             {/* Student & Affiliated Portals */}
             <StudentPortals
               onOpenAdmissions={openAdmissionsWithTab}
               onOpenResults={() => setResultsOpen(true)}
+              onOpenDataDirectory={() => setDataDirectoryOpen(true)}
             />
 
             {/* 50th Golden Jubilee Era Banner */}
@@ -295,6 +304,15 @@ export default function App() {
         isOpen={leadershipOpen}
         onClose={() => setLeadershipOpen(false)}
         onOpenAdmissions={() => openAdmissionsWithTab('apply')}
+      />
+
+      <HostedDataModal
+        isOpen={dataDirectoryOpen}
+        onClose={() => setDataDirectoryOpen(false)}
+        onDataReloaded={db => {
+          setHostedDb(db);
+          setNewsList(db.newsBulletins);
+        }}
       />
     </div>
   );

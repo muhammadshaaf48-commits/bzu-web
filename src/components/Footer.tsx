@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { subscribeNewsletter } from '../services/hostedData.ts';
 
 interface FooterProps {
   onOpenAcademics: (facultyId?: string) => void;
@@ -26,12 +27,7 @@ export const Footer: React.FC<FooterProps> = ({
     if (!email || !email.includes('@')) return;
     setSubscribing(true);
     try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      const data = await res.json();
+      const data = await subscribeNewsletter(email);
       setSubscribedMsg(data.message || 'Subscribed successfully!');
       setEmail('');
       setTimeout(() => setSubscribedMsg(''), 4000);

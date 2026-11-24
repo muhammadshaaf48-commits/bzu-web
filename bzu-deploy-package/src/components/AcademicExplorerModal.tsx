@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Faculty, Program, DegreeLevel } from '../types/index.ts';
+import { Faculty, Program } from '../types/index.ts';
+import { fetchFaculties, fetchPrograms } from '../services/hostedData.ts';
 
 interface AcademicExplorerModalProps {
   isOpen: boolean;
@@ -35,10 +36,7 @@ export const AcademicExplorerModal: React.FC<AcademicExplorerModalProps> = ({
   useEffect(() => {
     if (!isOpen) return;
     setLoading(true);
-    Promise.all([
-      fetch('/api/faculties').then(res => res.json()),
-      fetch('/api/programs').then(res => res.json()),
-    ])
+    Promise.all([fetchFaculties(), fetchPrograms()])
       .then(([facData, progData]) => {
         setFaculties(facData);
         setPrograms(progData);
